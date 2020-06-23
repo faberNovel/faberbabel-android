@@ -1,3 +1,14 @@
 <resources>
     <string name="app_name">faberbabelsample</string>
+    <string name="wording_from_faberbabel">I\'m injected from faberbabel</string>
+    <string name="wording_not_present_in_faberbabel">I\'m by default on the phone</string>
+    <plurals
+        name="wording_plural_example">
+        <item quantity="zero"> I\'m plural zero from phone</item>
+        <item quantity="one"> I\'m plural one from phone</item>
+        <item quantity="two"> I\'m plural two from phone</item>
+        <item quantity="few"> I\'m plural few from phone</item>
+        <item quantity="many"> I\'m plural many from phone></item>
+        <item quantity="other"> I\'m plural other from phone</item>
+    </plurals>
 </resources>
