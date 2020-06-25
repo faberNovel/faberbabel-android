@@ -1,4 +1,4 @@
-package com.fabernovel.faberbabel.appwording.resourceextend
+package com.fabernovel.faberbabel.internal.resourceextend
 
 import com.fabernovel.faberbabel.R
 import android.content.Context
@@ -121,7 +121,12 @@ internal class FaberbabelResources(
     ): String {
         val wordingKey = this.getResourceEntryName(id)
         val quantityType = super.getQuantityText(R.plurals.fbb_plurals_types, quantity)
-        return this.resourcesManager.getQuantityString(wordingKey, quantityType, formatArgs)!!
+        val resource = resourcesManager.getQuantityString(wordingKey, quantityType, formatArgs)
+        return if (resource != null) {
+            resource
+        } else {
+            super.getQuantityString(id, quantity, formatArgs)
+        }
     }
 
     /**

@@ -1,16 +1,16 @@
-package com.fabernovel.faberbabel.data.model
+package com.fabernovel.faberbabel.internal.data.model
 
-sealed class StringResource {
+internal sealed class StringResource {
 
     data class SimpleString(val value: String) : StringResource()
 
     data class PluralString(
-        val zero: String,
-        val one: String,
-        val two: String,
-        val few: String,
-        val many: String,
-        val other: String
+        val zero: String?,
+        val one: String?,
+        val two: String?,
+        val few: String?,
+        val many: String?,
+        val other: String?
     ) : StringResource()
 
     companion object {

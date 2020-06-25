@@ -1,12 +1,11 @@
-package com.fabernovel.faberbabel.data
+package com.fabernovel.faberbabel.internal.data
 
-import com.fabernovel.faberbabel.core.WordingRepository
-import com.fabernovel.faberbabel.data.model.StringResource
+import com.fabernovel.faberbabel.internal.core.WordingRepository
+import com.fabernovel.faberbabel.internal.data.model.StringResource
 import java.util.HashMap
 
 internal class WordingRepositoryImpl : WordingRepository {
-    private val wordingMap: MutableMap<String, StringResource> =
-        HashMap()
+    private val wordingMap: MutableMap<String, StringResource> = HashMap()
 
     override fun getWording(): Map<String, StringResource> {
         if (wordingMap.isEmpty()) {

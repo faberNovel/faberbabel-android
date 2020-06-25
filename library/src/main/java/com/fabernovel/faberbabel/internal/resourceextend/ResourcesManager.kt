@@ -1,4 +1,4 @@
-package com.fabernovel.faberbabel.appwording.resourceextend
+package com.fabernovel.faberbabel.internal.resourceextend
 
 internal interface ResourcesManager {
     fun getString(wordingKey: String): String?

@@ -1,4 +1,4 @@
-package com.fabernovel.faberbabel.core
+package com.fabernovel.faberbabel.internal.core
 
 class Errors {
     companion object {

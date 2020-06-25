@@ -1,10 +1,10 @@
-package com.fabernovel.faberbabel.appwording.contextextend
+package com.fabernovel.faberbabel.internal.contextextend
 
 import android.content.Context
 import android.content.ContextWrapper
 import android.content.res.Resources
-import com.fabernovel.faberbabel.appwording.resourceextend.FaberbabelResources
-import com.fabernovel.faberbabel.appwording.resourceextend.ResourcesManager
+import com.fabernovel.faberbabel.internal.resourceextend.FaberbabelResources
+import com.fabernovel.faberbabel.internal.resourceextend.ResourcesManager
 
 internal class FaberbabelContextWrapper(
     context: Context?,

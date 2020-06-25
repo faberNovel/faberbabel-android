@@ -1,7 +1,7 @@
-package com.fabernovel.faberbabel.core
+package com.fabernovel.faberbabel.internal.core
 
-import com.fabernovel.faberbabel.appwording.resourceextend.ResourcesManager
-import com.fabernovel.faberbabel.data.model.StringResource
+import com.fabernovel.faberbabel.internal.resourceextend.ResourcesManager
+import com.fabernovel.faberbabel.internal.data.model.StringResource
 import java.util.IllegalFormatException
 
 internal class WordingResourcesManager(private val repository: WordingRepository) :
@@ -19,7 +19,14 @@ internal class WordingResourcesManager(private val repository: WordingRepository
     override fun getString(wordingKey: String, formatArgs: Array<out Any?>): String? {
         val resource = repository.getWording()[wordingKey]
         return when (resource) {
-            is StringResource.SimpleString -> resource.value.format(formatArgs)
+            is StringResource.SimpleString -> {
+                try {
+                    resource.value.format(formatArgs)
+                } catch (exception: IllegalFormatException) {
+                    null
+                }
+            }
+
             is StringResource.PluralString ->
                 throw IllegalArgumentException(Errors.NOT_PLURAL_RESOURCE_ERROR)
             null -> null
@@ -49,7 +56,7 @@ internal class WordingResourcesManager(private val repository: WordingRepository
                 throw IllegalArgumentException(Errors.NOT_SIMPLE_RESOURCE_ERROR)
             is StringResource.PluralString ->
                 try {
-                    matchQuantityType(resource, quantity).format(formatArgs)
+                    matchQuantityType(resource, quantity)?.format(formatArgs)
                 } catch (exception: IllegalFormatException) {
                     null
                 }
@@ -70,7 +77,7 @@ internal class WordingResourcesManager(private val repository: WordingRepository
     private fun matchQuantityType(
         resource: StringResource.PluralString,
         quantityType: CharSequence
-    ): String {
+    ): String? {
         return when (quantityType) {
             ZERO -> resource.zero
             ONE -> resource.one
