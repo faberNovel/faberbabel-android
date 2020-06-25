@@ -4,7 +4,7 @@ import com.fabernovel.faberbabel.R
 import android.content.Context
 import android.content.res.Resources
 
-internal class FaberbabelResources(
+internal class FaberBabelResources(
     context: Context,
     private val resourcesManager: ResourcesManager
 ) : Resources(context.assets, context.resources.displayMetrics, context.resources.configuration) {

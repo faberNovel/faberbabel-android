@@ -3,7 +3,7 @@ package com.fabernovel.faberbabel.sample
 import android.content.Context
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.fabernovel.faberbabel.Faberbabel
+import com.fabernovel.faberbabel.FaberBabel
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -19,8 +19,8 @@ class MainActivity : AppCompatActivity() {
 
     override fun attachBaseContext(newBase: Context) {
         // Must be injected as a Singleton by Dagger
-        val faberbabelSDK = Faberbabel()
+        val faberBabelSDK = FaberBabel()
 
-        super.attachBaseContext(faberbabelSDK.provideBabelContext(newBase))
+        super.attachBaseContext(faberBabelSDK.provideFaberBabelContextWrapper(newBase))
     }
 }

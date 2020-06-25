@@ -3,14 +3,14 @@ package com.fabernovel.faberbabel.internal.contextextend
 import android.content.Context
 import android.content.ContextWrapper
 import android.content.res.Resources
-import com.fabernovel.faberbabel.internal.resourceextend.FaberbabelResources
+import com.fabernovel.faberbabel.internal.resourceextend.FaberBabelResources
 import com.fabernovel.faberbabel.internal.resourceextend.ResourcesManager
 
-internal class FaberbabelContextWrapper(
+internal class FaberBabelContextWrapper(
     context: Context?,
     private val resourcesManager: ResourcesManager
 ) : ContextWrapper(context) {
-    var faberbabelResources: Resources? = null
+    private var faberBabelResources: Resources? = null
 
     /**
      * Returns the Resources that was override by faberbabel
@@ -18,12 +18,12 @@ internal class FaberbabelContextWrapper(
      * @return An extension of Resources
      */
     override fun getResources(): Resources? {
-        if (this.faberbabelResources == null) {
-            this.faberbabelResources = FaberbabelResources(
+        if (this.faberBabelResources == null) {
+            this.faberBabelResources = FaberBabelResources(
                 this.baseContext.applicationContext,
                 resourcesManager
             )
         }
-        return this.faberbabelResources
+        return this.faberBabelResources
     }
 }
