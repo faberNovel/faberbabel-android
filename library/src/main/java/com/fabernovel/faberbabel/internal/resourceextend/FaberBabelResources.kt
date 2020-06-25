@@ -51,7 +51,7 @@ internal class FaberBabelResources(
         return if (resource != null) {
             resource
         } else {
-            super.getString(id)
+            super.getString(id, formatArgs)
         }
     }
 
