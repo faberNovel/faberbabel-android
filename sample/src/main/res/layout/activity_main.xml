@@ -8,6 +8,16 @@
     tools:context=".MainActivity"
     >
 
+    <Toolbar
+        android:id="@+id/wordingToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:title="@string/wording_from_faberbabel_to_inflate_toolbar_title"
+        />
+
     <TextView
         android:id="@+id/wordingFromFaberbabel"
         android:layout_width="wrap_content"
@@ -15,7 +25,7 @@
         app:layout_constraintBottom_toTopOf="@+id/wordingNotPresentInFaberbabel"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/wordingToolbar"
         />
 
     <TextView
