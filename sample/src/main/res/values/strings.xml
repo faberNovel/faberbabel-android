@@ -11,5 +11,6 @@
         <item quantity="many"> I\'m plural many from phone></item>
         <item quantity="other"> I\'m plural other from phone</item>
     </plurals>
-    <string name="wording_from_faberbabel_to_inflater">I\'m inflated from phone</string>
+    <string name="wording_from_faberbabel_to_inflate_text_view">I\'m inflated from phone</string>
+    <string name="wording_from_faberbabel_to_inflate_button_text">on phone</string>
 </resources>

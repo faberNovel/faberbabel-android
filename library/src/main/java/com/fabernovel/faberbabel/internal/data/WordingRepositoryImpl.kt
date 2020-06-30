@@ -12,7 +12,7 @@ internal class WordingRepositoryImpl : WordingRepository {
             // Todo fetch wording from service
             wordingMap["wording_from_faberbabel"] =
                 StringResource.SimpleString("I'm injected from faberbabel")
-            wordingMap["wording_from_faberbabel_to_inflater"] =
+            wordingMap["wording_from_faberbabel_to_inflate_text_view"] =
                 StringResource.SimpleString("I'm inflated from faberbabel")
 
             wordingMap["wording_plural_example"] =
@@ -24,6 +24,9 @@ internal class WordingRepositoryImpl : WordingRepository {
                     " I'm plural babel many",
                     " I'm plural babel other"
                 )
+
+            wordingMap["wording_from_faberbabel_to_inflate_button_text"] =
+                StringResource.SimpleString("on faberbabel")
         }
         return wordingMap
     }

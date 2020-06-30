@@ -38,14 +38,25 @@
         app:layout_constraintTop_toBottomOf="@+id/wordingNotPresentInFaberbabel"
         />
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/wordingInflatedFromFaberbabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/wording_from_faberbabel_to_inflater"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:text="@string/wording_from_faberbabel_to_inflate_text_view"
+        app:layout_constraintBottom_toTopOf="@+id/wordingButton"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/pluralFromFaberbabel"
+        />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/wordingButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:text="@string/wording_from_faberbabel_to_inflate_button_text"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         />
 </androidx.constraintlayout.widget.ConstraintLayout>
