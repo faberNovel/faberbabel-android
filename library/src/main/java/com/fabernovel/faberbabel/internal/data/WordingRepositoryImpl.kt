@@ -29,6 +29,10 @@ internal class WordingRepositoryImpl : WordingRepository {
                 StringResource.SimpleString("on faberbabel")
             wordingMap["wording_from_faberbabel_to_inflate_toolbar_title"] =
                 StringResource.SimpleString("Faberbabel wording")
+            wordingMap["wording_faberbabel_menu_item_1"] =
+                StringResource.SimpleString("Faberbabel item 1")
+            wordingMap["wording_faberbabel_menu_item_2"] =
+                StringResource.SimpleString("Faberbabel item 2")
         }
         return wordingMap
     }

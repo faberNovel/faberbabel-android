@@ -14,4 +14,6 @@
     <string name="wording_from_faberbabel_to_inflate_text_view">I\'m inflated from phone</string>
     <string name="wording_from_faberbabel_to_inflate_button_text">on phone</string>
     <string name="wording_from_faberbabel_to_inflate_toolbar_title">phone wording</string>
+    <string name="wording_faberbabel_menu_item_1">phone item 1</string>
+    <string name="wording_faberbabel_menu_item_2">phone item 2</string>
 </resources>
