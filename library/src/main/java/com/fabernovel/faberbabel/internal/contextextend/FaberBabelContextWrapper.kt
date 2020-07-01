@@ -6,6 +6,7 @@ import android.content.res.Resources
 import android.view.LayoutInflater
 import com.fabernovel.faberbabel.internal.inflaterextend.FaberBabelLayoutInflater
 import com.fabernovel.faberbabel.internal.inflaterextend.TextViewTransformer
+import com.fabernovel.faberbabel.internal.inflaterextend.ToolbarTransformer
 import com.fabernovel.faberbabel.internal.inflaterextend.ViewTransformerManager
 import com.fabernovel.faberbabel.internal.resourceextend.FaberBabelResources
 import com.fabernovel.faberbabel.internal.resourceextend.ResourcesManager
@@ -19,7 +20,8 @@ internal class FaberBabelContextWrapper(
 
     init {
         viewTransformerManager = ViewTransformerManager(
-            TextViewTransformer()
+            TextViewTransformer(),
+            ToolbarTransformer()
         )
     }
 

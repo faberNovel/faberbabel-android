@@ -3,9 +3,11 @@ package com.fabernovel.faberbabel.internal.inflaterextend
 import android.util.AttributeSet
 import android.view.View
 import android.widget.TextView
+import androidx.appcompat.widget.Toolbar
 
 internal class ViewTransformerManager(
-    private val textViewTransformer: TextViewTransformer
+    private val textViewTransformer: TextViewTransformer,
+    private val toolbarTransformer: ToolbarTransformer
 ) {
 
     /**
@@ -22,6 +24,8 @@ internal class ViewTransformerManager(
         }
         return when (view) {
             is TextView -> textViewTransformer.transform(view, attrs)
+            is Toolbar -> toolbarTransformer.transform(view, attrs)
+            is android.widget.Toolbar -> toolbarTransformer.transform(view, attrs)
             else -> view
         }
     }
