@@ -4,6 +4,9 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import org.xmlpull.v1.XmlPullParser
+import java.lang.reflect.Field
 
 internal class FaberBabelLayoutInflater(
     original: LayoutInflater?,
@@ -11,6 +14,9 @@ internal class FaberBabelLayoutInflater(
     private val viewTransformerManager: ViewTransformerManager,
     cloned: Boolean
 ) : LayoutInflater(original, newContext) {
+
+    private var constructorArgs: Field? = null
+    private var isPrivateFactorySet = false
 
     init {
         if (!cloned) {
@@ -102,6 +108,85 @@ internal class FaberBabelLayoutInflater(
             attrs: AttributeSet
         ): View? {
             val view = factory2.onCreateView(name, context, attrs)
+            return applyChange(view, attrs)
+        }
+    }
+
+    private fun createCustomViewInternal(
+        view: View?,
+        name: String,
+        viewContext: Context,
+        attrs: AttributeSet
+    ): View? {
+        var currentView = view
+        if (view == null && name.indexOf('.') > -1) {
+            if (constructorArgs == null) {
+                constructorArgs =
+                    ReflectionUtils.getField(LayoutInflater::class.java, "mConstructorArgs")
+            }
+            val constructorArgsList =
+                ReflectionUtils.getValue(constructorArgs!!, this) as Array<Any?>
+            val lastContext = constructorArgsList[0]
+
+            constructorArgsList[0] = viewContext
+            try {
+                currentView = createView(name, null, attrs)
+            } catch (ignored: ClassNotFoundException) {
+            } finally {
+                constructorArgsList[0] = lastContext
+            }
+        }
+        return currentView
+    }
+
+    private fun setPrivateFactoryInternal() {
+        if (isPrivateFactorySet) return
+        if (context !is Factory2) {
+            isPrivateFactorySet = true
+            return
+        }
+        val setPrivateFactoryMethod = ReflectionUtils
+            .getMethod(LayoutInflater::class.java, "setPrivateFactory")
+        if (setPrivateFactoryMethod != null) {
+            val newFactory = PrivateWrapperFactory2(context as Factory2)
+            ReflectionUtils.invokeMethod(
+                this,
+                setPrivateFactoryMethod,
+                newFactory
+            )
+        }
+        isPrivateFactorySet = true
+    }
+
+    override fun inflate(
+        parser: XmlPullParser?,
+        root: ViewGroup?,
+        attachToRoot: Boolean
+    ): View? {
+        setPrivateFactoryInternal()
+        return super.inflate(parser, root, attachToRoot)
+    }
+
+    private inner class PrivateWrapperFactory2 constructor(private val factory2: Factory2) :
+        Factory2 {
+        override fun onCreateView(
+            parent: View?,
+            name: String,
+            context: Context,
+            attrs: AttributeSet
+        ): View? {
+            var view = factory2.onCreateView(parent, name, context, attrs)
+            view = createCustomViewInternal(view, name, context, attrs)
+            return applyChange(view, attrs)
+        }
+
+        override fun onCreateView(
+            name: String,
+            context: Context,
+            attrs: AttributeSet
+        ): View? {
+            var view = factory2.onCreateView(name, context, attrs)
+            view = createCustomViewInternal(view, name, context, attrs)
             return applyChange(view, attrs)
         }
     }
