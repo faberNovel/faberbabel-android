@@ -80,8 +80,7 @@ internal class FaberBabelLayoutInflater(
 
     private inner class WrapperFactory internal constructor(
         private val factory: Factory
-    ) :
-        Factory {
+    ) : Factory {
         override fun onCreateView(
             name: String,
             context: Context,
@@ -94,8 +93,7 @@ internal class FaberBabelLayoutInflater(
 
     private inner class WrapperFactory2 internal constructor(
         private val factory2: Factory2
-    ) :
-        Factory2 {
+    ) : Factory2 {
         override fun onCreateView(
             parent: View?,
             name: String,
@@ -177,8 +175,7 @@ internal class FaberBabelLayoutInflater(
 
     private inner class PrivateWrapperFactory2 constructor(
         private val factory2: Factory2
-    ) :
-        Factory2 {
+    ) : Factory2 {
         override fun onCreateView(
             parent: View?,
             name: String,
