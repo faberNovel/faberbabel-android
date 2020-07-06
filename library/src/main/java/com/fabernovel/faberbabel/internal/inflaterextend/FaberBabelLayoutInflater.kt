@@ -78,7 +78,9 @@ internal class FaberBabelLayoutInflater(
         return viewTransformerManager.transform(view, attrs)
     }
 
-    private inner class WrapperFactory internal constructor(private val factory: Factory) :
+    private inner class WrapperFactory internal constructor(
+        private val factory: Factory
+    ) :
         Factory {
         override fun onCreateView(
             name: String,
@@ -90,7 +92,9 @@ internal class FaberBabelLayoutInflater(
         }
     }
 
-    private inner class WrapperFactory2 internal constructor(private val factory2: Factory2) :
+    private inner class WrapperFactory2 internal constructor(
+        private val factory2: Factory2
+    ) :
         Factory2 {
         override fun onCreateView(
             parent: View?,
@@ -125,15 +129,19 @@ internal class FaberBabelLayoutInflater(
                     ReflectionUtils.getField(LayoutInflater::class.java, "mConstructorArgs")
             }
             val constructorArgsList =
-                ReflectionUtils.getValue(constructorArgs!!, this) as Array<Any?>
-            val lastContext = constructorArgsList[0]
+                ReflectionUtils.getValue(constructorArgs, this) as Array<Any?>?
 
-            constructorArgsList[0] = viewContext
-            try {
-                currentView = createView(name, null, attrs)
-            } catch (ignored: ClassNotFoundException) {
-            } finally {
-                constructorArgsList[0] = lastContext
+            if (constructorArgsList != null && constructorArgsList.isNotEmpty()) {
+                val lastContext = constructorArgsList[0]
+
+                constructorArgsList[0] = viewContext
+                try {
+                    currentView = createView(name, null, attrs)
+                } catch (ignored: ClassNotFoundException) {
+                    // no-op
+                } finally {
+                    constructorArgsList[0] = lastContext
+                }
             }
         }
         return currentView
@@ -167,7 +175,9 @@ internal class FaberBabelLayoutInflater(
         return super.inflate(parser, root, attachToRoot)
     }
 
-    private inner class PrivateWrapperFactory2 constructor(private val factory2: Factory2) :
+    private inner class PrivateWrapperFactory2 constructor(
+        private val factory2: Factory2
+    ) :
         Factory2 {
         override fun onCreateView(
             parent: View?,

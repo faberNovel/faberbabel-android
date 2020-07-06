@@ -7,20 +7,25 @@ import java.lang.reflect.Method
 
 internal object ReflectionUtils {
     private val TAG = ReflectionUtils::class.java.simpleName
-    fun getField(clazz: Class<*>, fieldName: String?): Field? {
+    fun getField(clazz: Class<*>, fieldName: String): Field? {
         try {
-            val f = clazz.getDeclaredField(fieldName!!)
-            f.isAccessible = true
-            return f
+            val field = clazz.getDeclaredField(fieldName)
+            field.isAccessible = true
+            return field
         } catch (ignored: NoSuchFieldException) {
+            // no-op
         }
         return null
     }
 
-    operator fun getValue(field: Field, obj: Any?): Any? {
+    operator fun getValue(field: Field?, obj: Any?): Any? {
+        if (field == null) {
+            return null
+        }
         try {
             return field[obj]
         } catch (ignored: IllegalAccessException) {
+            // no-op
         }
         return null
     }
@@ -33,6 +38,7 @@ internal object ReflectionUtils {
         try {
             field[obj] = value
         } catch (ignored: IllegalAccessException) {
+            // no-op
         }
     }
 
