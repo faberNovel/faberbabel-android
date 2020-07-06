@@ -7,41 +7,56 @@ import java.util.IllegalFormatException
 internal class WordingResourcesManager(private val repository: WordingRepository) :
     ResourcesManager {
     override fun getString(wordingKey: String): String? {
-        val resource = repository.getWording()[wordingKey]
-        return when (resource) {
-            is StringResource.SimpleString -> resource.value
-            is StringResource.PluralString ->
-                throw IllegalArgumentException(Errors.NOT_PLURAL_RESOURCE_ERROR)
-            null -> null
+        val wording = repository.getWording()
+        if (wording != null) {
+            val resource = wording[wordingKey]
+            return when (resource) {
+                is StringResource.SimpleString -> resource.value
+                is StringResource.PluralString ->
+                    throw IllegalArgumentException(Errors.NOT_PLURAL_RESOURCE_ERROR)
+                null -> null
+            }
+        } else {
+            return null
         }
     }
 
     override fun getString(wordingKey: String, formatArgs: Array<out Any?>): String? {
-        val resource = repository.getWording()[wordingKey]
-        return when (resource) {
-            is StringResource.SimpleString -> {
-                try {
-                    resource.value.format(formatArgs)
-                } catch (exception: IllegalFormatException) {
-                    null
+        val wording = repository.getWording()
+        if (wording != null) {
+            val resource = wording[wordingKey]
+            return when (resource) {
+                is StringResource.SimpleString -> {
+                    try {
+                        resource.value.format(formatArgs)
+                    } catch (exception: IllegalFormatException) {
+                        null
+                    }
                 }
-            }
 
-            is StringResource.PluralString ->
-                throw IllegalArgumentException(Errors.NOT_PLURAL_RESOURCE_ERROR)
-            null -> null
+                is StringResource.PluralString ->
+                    throw IllegalArgumentException(Errors.NOT_PLURAL_RESOURCE_ERROR)
+                null -> null
+            }
+        } else {
+            return null
         }
     }
 
     override fun getText(wordingKey: String): CharSequence? {
-        val resource = repository.getWording()[wordingKey]
-        return when (resource) {
-            is StringResource.SimpleString -> {
-                resource.value
+        val wording = repository.getWording()
+        if (wording != null) {
+            val resource = wording[wordingKey]
+            return when (resource) {
+                is StringResource.SimpleString -> {
+                    resource.value
+                }
+                is StringResource.PluralString ->
+                    throw IllegalArgumentException(Errors.NOT_PLURAL_RESOURCE_ERROR)
+                null -> null
             }
-            is StringResource.PluralString ->
-                throw IllegalArgumentException(Errors.NOT_PLURAL_RESOURCE_ERROR)
-            null -> null
+        } else {
+            return null
         }
     }
 
@@ -50,27 +65,37 @@ internal class WordingResourcesManager(private val repository: WordingRepository
         quantity: CharSequence,
         formatArgs: Array<out Any?>
     ): String? {
-        val resource = repository.getWording()[wordingKey]
-        return when (resource) {
-            is StringResource.SimpleString ->
-                throw IllegalArgumentException(Errors.NOT_SIMPLE_RESOURCE_ERROR)
-            is StringResource.PluralString ->
-                try {
-                    matchQuantityType(resource, quantity)?.format(formatArgs)
-                } catch (exception: IllegalFormatException) {
-                    null
-                }
-            null -> null
+        val wording = repository.getWording()
+        if (wording != null) {
+            val resource = wording[wordingKey]
+            return when (resource) {
+                is StringResource.SimpleString ->
+                    throw IllegalArgumentException(Errors.NOT_SIMPLE_RESOURCE_ERROR)
+                is StringResource.PluralString ->
+                    try {
+                        matchQuantityType(resource, quantity)?.format(formatArgs)
+                    } catch (exception: IllegalFormatException) {
+                        null
+                    }
+                null -> null
+            }
+        } else {
+            return null
         }
     }
 
     override fun getQuantityText(wordingKey: String, quantity: CharSequence): CharSequence? {
-        val resource = repository.getWording()[wordingKey]
-        return when (resource) {
-            is StringResource.SimpleString ->
-                throw IllegalArgumentException(Errors.NOT_SIMPLE_RESOURCE_ERROR)
-            is StringResource.PluralString -> matchQuantityType(resource, quantity)
-            null -> null
+        val wording = repository.getWording()
+        if (wording != null) {
+            val resource = wording[wordingKey]
+            return when (resource) {
+                is StringResource.SimpleString ->
+                    throw IllegalArgumentException(Errors.NOT_SIMPLE_RESOURCE_ERROR)
+                is StringResource.PluralString -> matchQuantityType(resource, quantity)
+                null -> null
+            }
+        } else {
+            return null
         }
     }
 
