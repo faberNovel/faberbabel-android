@@ -4,86 +4,16 @@ import com.fabernovel.faberbabel.internal.data.model.StringResource
 import com.fabernovel.faberbabel.internal.data.service.XmlParser
 import org.junit.Assert
 import org.junit.Test
+import java.io.BufferedReader
+import java.io.InputStreamReader
 
 class XmlParserUnitTest {
-    private val correctXmlWithStringsOnly = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-        "<resources>\n" +
-        "    <string name=\"hello_world\">\"Hello\"</string>\n" +
-        "    <string name=\"description\">\"This is Faberbabel.\"</string>\n" +
-        "</resources>\n"
-
-    private val correctXmlWithPlurals = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-        "<resources>\n" +
-        "    <string name=\"hello_world\">\"Hello\"</string>\n" +
-        "    <string name=\"description\">\"This is Faberbabel.\"</string>\n" +
-        "<plurals name=\"plural_one\">\n" +
-        "        <item quantity=\"zero\">\"zero faberbabel\"</item>\n" +
-        "        <item quantity=\"one\">\"one faberbabel\"</item>\n" +
-        "        <item quantity=\"two\">\"two faberbabels\"</item>\n" +
-        " </plurals>\n" +
-        "<plurals name=\"plural_two\">\n" +
-        "        <item quantity=\"other\">\"other faberbabel\"</item>\n" +
-        "</plurals>\n" +
-        "</resources>\n"
-
-    private val notCorrectlyClosedXml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-        "<resources>\n" +
-        "    <string name=\"hello_world\">\"Hello\"</string>\n" +
-        "    <string name=\"description\">\"This is Faberbabel.\"" +
-        "<plurals name=\"plural_one\">\n" +
-        "        <item quantity=\"zero\">\"zero faberbabel\"</item>\n" +
-        "        <item quantity=\"one\">\"one faberbabel\"</item>\n" +
-        "        <item quantity=\"two\">\"two faberbabels\"</item>\n" +
-        "<plurals name=\"plural_two\">\n" +
-        "        <item quantity=\"other\">\"other faberbabel\"</item>\n" +
-        "</plurals>\n" +
-        "</resources>\n"
-
-    private val xmlWithMissingAttributeValue = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-        "<resources>\n" +
-        "    <string name=\"hello_world\">\"Hello\"</string>\n" +
-        "    <string name=>\"This is Faberbabel.\"</string>\n" +
-        "<plurals name=\"plural_one\">\n" +
-        "        <item quantity=\"zero\">\"zero faberbabel\"</item>\n" +
-        "        <item quantity=\"one\">\"one faberbabel\"</item>\n" +
-        "        <item quantity=\"two\">\"two faberbabels\"</item>\n" +
-        "<plurals name=\"plural_two\">\n" +
-        "        <item quantity=\"other\">\"other faberbabel\"</item>\n" +
-        "</plurals>\n" +
-        "</resources>\n"
-
-    private val XmlWithoutText = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-        "<resources>\n" +
-        "    <string name=\"hello_world\"></string>\n" +
-        "    <string name=\"description\">\"This is Faberbabel.\"</string>\n" +
-        "<plurals name=\"plural_one\">\n" +
-        "        <item quantity=\"zero\">\"zero faberbabel\"</item>\n" +
-        "        <item quantity=\"one\">\"one faberbabel\"</item>\n" +
-        "        <item quantity=\"two\">\"two faberbabels\"</item>\n" +
-        "</plurals>\n" +
-        "<plurals name=\"plural_two\">\n" +
-        "        <item quantity=\"other\"></item>\n" +
-        " </plurals>\n" +
-        "</resources>\n"
-
-    private val XmlWithoutKey = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-        "<resources>\n" +
-        "    <string name=\"hello_world\">\"Hello\"</string>\n" +
-        "    <string>\"This is Faberbabel.\"</string>\n" +
-        "<plurals name=\"plural_one\">\n" +
-        "        <item>\"zero faberbabel\"</item>\n" +
-        "        <item quantity=\"one\">\"one faberbabel\"</item>\n" +
-        "        <item quantity=\"two\">\"two faberbabels\"</item>\n" +
-        "</plurals>\n" +
-        "<plurals name=\"plural_two\">\n" +
-        "        <item quantity=\"other\">\"other faberbabel\"</item>\n" +
-        " </plurals>\n" +
-        "</resources>\n"
-
     private val xmlParser = XmlParser()
 
     @Test
     fun testCorrectXml() {
+        val correctXmlWithStringsOnly =
+            readTestFile("/xmlparsertestfiles/test_xml_with_strings_only.xml")
         val expectedResponse = mutableMapOf<String, StringResource>()
         expectedResponse["hello_world"] = StringResource.SimpleString("Hello")
         expectedResponse["description"] = StringResource.SimpleString("This is Faberbabel.")
@@ -93,6 +23,8 @@ class XmlParserUnitTest {
 
     @Test
     fun testCorrectXmlWithPlurals() {
+        val correctXmlWithPlurals =
+            readTestFile("/xmlparsertestfiles/test_xml_with_plurals.xml")
         val expectedResponse = mutableMapOf<String, StringResource>()
         expectedResponse["hello_world"] = StringResource.SimpleString("Hello")
         expectedResponse["description"] = StringResource.SimpleString("This is Faberbabel.")
@@ -118,12 +50,16 @@ class XmlParserUnitTest {
 
     @Test
     fun testNotCorrectlyClosedXml() {
+        val notCorrectlyClosedXml =
+            readTestFile("/xmlparsertestfiles/test_not_correctly_closed_xml_xml")
         val response = xmlParser.parseXml(notCorrectlyClosedXml)
         Assert.assertEquals(emptyMap<String, StringResource>(), response)
     }
 
     @Test
     fun testXmlWithMissingAttributeValue() {
+        val xmlWithMissingAttributeValue =
+            readTestFile("/xmlparsertestfiles/test_xml_with_missing_attribute_value.xml")
         val response = xmlParser.parseXml(xmlWithMissingAttributeValue)
         Assert.assertEquals(emptyMap<String, StringResource>(), response)
     }
@@ -136,6 +72,8 @@ class XmlParserUnitTest {
 
     @Test
     fun testXmlWithoutText() {
+        val xmlWithoutText =
+            readTestFile("/xmlparsertestfiles/test_xml_without_text.xml")
         val expectedResponse = mutableMapOf<String, StringResource>()
         expectedResponse["description"] = StringResource.SimpleString("This is Faberbabel.")
         expectedResponse["plural_one"] = StringResource.PluralString(
@@ -146,12 +84,14 @@ class XmlParserUnitTest {
             null,
             null
         )
-        val response = xmlParser.parseXml(XmlWithoutText)
+        val response = xmlParser.parseXml(xmlWithoutText)
         Assert.assertEquals(expectedResponse, response)
     }
 
     @Test
     fun testXmlWithoutKey() {
+        val xmlWithoutKey =
+            readTestFile("/xmlparsertestfiles/test_xml_without_key.xml")
         val expectedResponse = mutableMapOf<String, StringResource>()
         expectedResponse["hello_world"] = StringResource.SimpleString("Hello")
         expectedResponse["plural_two"] = StringResource.PluralString(
@@ -162,7 +102,14 @@ class XmlParserUnitTest {
             null,
             "other faberbabel"
         )
-        val response = xmlParser.parseXml(XmlWithoutKey)
+        val response = xmlParser.parseXml(xmlWithoutKey)
         Assert.assertEquals(expectedResponse, response)
+    }
+
+    private fun readTestFile(fileName: String): String? {
+        val xmlInputStream = javaClass.getResourceAsStream(fileName)
+        return if (xmlInputStream != null) {
+            BufferedReader(InputStreamReader(xmlInputStream)).readText()
+        } else null
     }
 }

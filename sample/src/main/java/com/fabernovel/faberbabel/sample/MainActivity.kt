@@ -34,15 +34,19 @@ class MainActivity : AppCompatActivity() {
         // The Config object contains url of the faberbabel service, project id  and language code
         faberBabelSDK.asyncFetchFaberBabelWording(
             Config(
-                "https://faberbabel-develop.herokuapp.com/translations/projects",
-                "349a41ab-7815-4cf6-ae54-2e5f2304bfe9",
+                FABERBABEL_SERVICE_URL,
+                PROJECT_ID,
                 Locale.getDefault().language
             )
         )
 
-
         super.attachBaseContext(faberBabelSDK.provideFaberBabelContextWrapper(newBase))
     }
 
-
+    // These values should be in the config file of the application
+    companion object {
+        private const val FABERBABEL_SERVICE_URL =
+            "https://faberbabel-develop.herokuapp.com/translations/projects"
+        private const val PROJECT_ID = "349a41ab-7815-4cf6-ae54-2e5f2304bfe9"
+    }
 }
