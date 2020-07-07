@@ -1,6 +1,7 @@
 package com.fabernovel.faberbabel.internal.inflaterextend
 
 import android.content.Context
+import android.os.Build
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
@@ -122,23 +123,31 @@ internal class FaberBabelLayoutInflater(
     ): View? {
         var currentView = view
         if (view == null && name.indexOf('.') > -1) {
-            if (constructorArgs == null) {
-                constructorArgs =
-                    ReflectionUtils.getField(LayoutInflater::class.java, "mConstructorArgs")
-            }
-            val constructorArgsList =
-                ReflectionUtils.getValue(constructorArgs, this) as Array<Any?>?
+            if (Build.VERSION.SDK_INT <= 28) {
+                if (constructorArgs == null) {
+                    constructorArgs =
+                        ReflectionUtils.getField(LayoutInflater::class.java, "mConstructorArgs")
+                }
+                val constructorArgsList =
+                    ReflectionUtils.getValue(constructorArgs, this) as Array<Any?>?
 
-            if (constructorArgsList != null && constructorArgsList.isNotEmpty()) {
-                val lastContext = constructorArgsList[0]
+                if (constructorArgsList != null && constructorArgsList.isNotEmpty()) {
+                    val lastContext = constructorArgsList[0]
 
-                constructorArgsList[0] = viewContext
+                    constructorArgsList[0] = viewContext
+                    try {
+                        currentView = createView(name, null, attrs)
+                    } catch (ignored: ClassNotFoundException) {
+                        // no-op
+                    } finally {
+                        constructorArgsList[0] = lastContext
+                    }
+                }
+            } else {
                 try {
-                    currentView = createView(name, null, attrs)
+                    currentView = createView(viewContext, name, null, attrs)
                 } catch (ignored: ClassNotFoundException) {
                     // no-op
-                } finally {
-                    constructorArgsList[0] = lastContext
                 }
             }
         }
