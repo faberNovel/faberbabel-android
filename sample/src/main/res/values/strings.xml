@@ -16,4 +16,5 @@
     <string name="wording_from_faberbabel_to_inflate_toolbar_title">Phone wording</string>
     <string name="wording_faberbabel_menu_item_1">phone item 1</string>
     <string name="wording_faberbabel_menu_item_2">phone item 2</string>
+    <string name="wording_faberbabel_sub_menu_item_1">sub phone item 2</string>
 </resources>
