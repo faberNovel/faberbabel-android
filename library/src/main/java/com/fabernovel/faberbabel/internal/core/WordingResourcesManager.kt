@@ -10,8 +10,9 @@ internal class WordingResourcesManager(private val repository: WordingRepository
         val resource = getResource(wordingKey)
         return when (resource) {
             is StringResource.SimpleString -> resource.value
-            is StringResource.PluralString ->
+            is StringResource.PluralString -> {
                 throw IllegalArgumentException(Errors.NOT_PLURAL_RESOURCE_ERROR)
+            }
             null -> null
         }
     }
@@ -27,8 +28,9 @@ internal class WordingResourcesManager(private val repository: WordingRepository
                 }
             }
 
-            is StringResource.PluralString ->
+            is StringResource.PluralString -> {
                 throw IllegalArgumentException(Errors.NOT_PLURAL_RESOURCE_ERROR)
+            }
             null -> null
         }
     }
@@ -39,8 +41,9 @@ internal class WordingResourcesManager(private val repository: WordingRepository
             is StringResource.SimpleString -> {
                 resource.value
             }
-            is StringResource.PluralString ->
+            is StringResource.PluralString -> {
                 throw IllegalArgumentException(Errors.NOT_PLURAL_RESOURCE_ERROR)
+            }
             null -> null
         }
     }
@@ -52,8 +55,9 @@ internal class WordingResourcesManager(private val repository: WordingRepository
     ): String? {
         val resource = getResource(wordingKey)
         return when (resource) {
-            is StringResource.SimpleString ->
+            is StringResource.SimpleString -> {
                 throw IllegalArgumentException(Errors.NOT_SIMPLE_RESOURCE_ERROR)
+            }
             is StringResource.PluralString ->
                 try {
                     matchQuantityType(resource, quantity)?.format(formatArgs)
@@ -67,8 +71,9 @@ internal class WordingResourcesManager(private val repository: WordingRepository
     override fun getQuantityText(wordingKey: String, quantity: CharSequence): CharSequence? {
         val resource = getResource(wordingKey)
         return when (resource) {
-            is StringResource.SimpleString ->
+            is StringResource.SimpleString -> {
                 throw IllegalArgumentException(Errors.NOT_SIMPLE_RESOURCE_ERROR)
+            }
             is StringResource.PluralString -> matchQuantityType(resource, quantity)
             null -> null
         }

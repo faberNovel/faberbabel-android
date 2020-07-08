@@ -1,5 +1,6 @@
 package com.fabernovel.faberbabel.internal.data.service
 
+import android.util.Log
 import com.fabernovel.faberbabel.internal.data.model.Config
 import okhttp3.Callback
 import okhttp3.HttpUrl
@@ -23,7 +24,7 @@ internal class FaberBabelService(private val okHttpClient: OkHttpClient) {
 
             okHttpClient.newCall(request).enqueue(callback)
         } catch (exception: Exception) {
-            // no-op
+            Log.e("faberbabel_error", exception.message, exception)
         }
     }
 
