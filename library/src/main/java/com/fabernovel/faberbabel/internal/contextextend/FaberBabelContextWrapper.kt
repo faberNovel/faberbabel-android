@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.ContextWrapper
 import android.content.res.Resources
 import android.view.LayoutInflater
+import com.fabernovel.faberbabel.internal.data.service.XmlParser
 import com.fabernovel.faberbabel.internal.inflaterextend.FaberBabelLayoutInflater
 import com.fabernovel.faberbabel.internal.inflaterextend.TextViewTransformer
 import com.fabernovel.faberbabel.internal.inflaterextend.ToolbarTransformer
@@ -13,15 +14,20 @@ import com.fabernovel.faberbabel.internal.resourceextend.ResourcesManager
 
 internal class FaberBabelContextWrapper(
     context: Context?,
-    private val resourcesManager: ResourcesManager
+    private val resourcesManager: ResourcesManager,
+    private val xmlParser: XmlParser
 ) : ContextWrapper(context) {
-    private var faberBabelResources: Resources? = null
+    private var faberBabelResources: FaberBabelResources
     private val viewTransformerManager: ViewTransformerManager
 
     init {
+        faberBabelResources = FaberBabelResources(
+            this.baseContext.applicationContext,
+            resourcesManager
+        )
         viewTransformerManager = ViewTransformerManager(
             TextViewTransformer(),
-            ToolbarTransformer()
+            ToolbarTransformer(xmlParser, faberBabelResources)
         )
     }
 
@@ -31,12 +37,6 @@ internal class FaberBabelContextWrapper(
      * @return An extension of Resources
      */
     override fun getResources(): Resources? {
-        if (this.faberBabelResources == null) {
-            this.faberBabelResources = FaberBabelResources(
-                this.baseContext.applicationContext,
-                resourcesManager
-            )
-        }
         return this.faberBabelResources
     }
 
