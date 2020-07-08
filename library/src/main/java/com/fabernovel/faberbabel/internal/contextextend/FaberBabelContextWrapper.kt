@@ -5,6 +5,7 @@ import android.content.ContextWrapper
 import android.content.res.Resources
 import android.view.LayoutInflater
 import com.fabernovel.faberbabel.internal.data.service.XmlParser
+import com.fabernovel.faberbabel.internal.inflaterextend.BottomNavigationViewTransformer
 import com.fabernovel.faberbabel.internal.inflaterextend.FaberBabelLayoutInflater
 import com.fabernovel.faberbabel.internal.inflaterextend.TextViewTransformer
 import com.fabernovel.faberbabel.internal.inflaterextend.ToolbarTransformer
@@ -27,7 +28,8 @@ internal class FaberBabelContextWrapper(
         )
         viewTransformerManager = ViewTransformerManager(
             TextViewTransformer(),
-            ToolbarTransformer(xmlParser, faberBabelResources)
+            ToolbarTransformer(xmlParser, faberBabelResources),
+            BottomNavigationViewTransformer(xmlParser, faberBabelResources)
         )
     }
 
