@@ -4,13 +4,16 @@ import android.util.AttributeSet
 import android.view.View
 import android.widget.TextView
 import com.fabernovel.faberbabel.internal.inflaterextend.ViewTransformerManager.Companion.ATTRIBUTE_PREFIX
+import com.fabernovel.faberbabel.internal.resourceextend.FaberBabelResources
 
 /**
  * This class purpose is to edit the widget text field during its xml file inflation to inject
  * FaberBabel wording so that it replace the default wording of the string resource present in the
  * application.
  */
-internal class TextViewTransformer : Transformer {
+internal class TextViewTransformer(
+    private val resources: FaberBabelResources
+) : Transformer {
 
     override fun transform(
         view: View?,
@@ -19,7 +22,6 @@ internal class TextViewTransformer : Transformer {
         if (view == null || attrs == null) {
             return view
         }
-        val resources = view.context.resources
         for (index in 0 until attrs.attributeCount) {
             val attributeName = attrs.getAttributeName(index)
             when (attributeName) {

@@ -26,16 +26,13 @@ internal class ToolbarTransformer(
             return view
         }
 
-        val resources = view.context.resources
         for (index in 0 until attrs.attributeCount) {
             val attributeName = attrs.getAttributeName(index)
             when (attributeName) {
                 ATTRIBUTE_ANDROID_TITLE, ATTRIBUTE_TITLE -> {
                     val value = attrs.getAttributeValue(index)
-                    if (
-                        value != null &&
-                        value.startsWith(ViewTransformerManager.ATTRIBUTE_PREFIX)
-                    ) {
+                    if (value != null &&
+                        value.startsWith(ViewTransformerManager.ATTRIBUTE_PREFIX)) {
                         setTitleForView(
                             view,
                             resources.getString(
@@ -47,10 +44,8 @@ internal class ToolbarTransformer(
 
                 ATTRIBUTE_APP_MENU, ATTRIBUTE_MENU -> {
                     val value = attrs.getAttributeValue(index)
-                    if (
-                        value != null &&
-                        value.startsWith(ViewTransformerManager.ATTRIBUTE_PREFIX)
-                    ) {
+                    if (value != null &&
+                        value.startsWith(ViewTransformerManager.ATTRIBUTE_PREFIX)) {
                         val resourceId = attrs.getAttributeResourceValue(index, 0)
                         val menuItems: List<MenuItem> = getMenuItems(resources, resourceId)
                         for (menuItem in menuItems) {

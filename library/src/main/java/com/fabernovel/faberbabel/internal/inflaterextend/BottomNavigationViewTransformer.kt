@@ -26,16 +26,13 @@ internal class BottomNavigationViewTransformer(
             return view
         }
 
-        val resources = view.context.resources
         for (index in 0 until attrs.attributeCount) {
             val attributeName = attrs.getAttributeName(index)
             when (attributeName) {
                 ATTRIBUTE_APP_MENU, ATTRIBUTE_MENU -> {
                     val value = attrs.getAttributeValue(index)
-                    if (
-                        value != null &&
-                        value.startsWith(ViewTransformerManager.ATTRIBUTE_PREFIX)
-                    ) {
+                    if (value != null &&
+                        value.startsWith(ViewTransformerManager.ATTRIBUTE_PREFIX)) {
                         val resourceId = attrs.getAttributeResourceValue(index, 0)
                         val menuItems: List<MenuItem> = getMenuItems(resources, resourceId)
                         for (menuItem in menuItems) {
@@ -51,7 +48,7 @@ internal class BottomNavigationViewTransformer(
     }
 
     private fun getMenuItems(resources: Resources?, resourceId: Int): List<MenuItem> {
-        if(resources != null) {
+        if (resources != null) {
             val parser = resources.getLayout(resourceId)
             return xmlParser.parseMenuXml(parser)
         }
@@ -61,12 +58,12 @@ internal class BottomNavigationViewTransformer(
     private fun setMenuItemForView(view: View, menuItem: MenuItem) {
         when (view) {
             is BottomNavigationView -> {
-                if (menuItem.titleId != 0 ) {
+                if (menuItem.titleId != 0) {
                     view.menu.findItem(menuItem.itemId).title =
                         resources.getString(menuItem.titleId)
                 }
 
-                if (menuItem.condensedTitleId != 0 ) {
+                if (menuItem.condensedTitleId != 0) {
                     view.menu.findItem(menuItem.itemId).title =
                         resources.getString(menuItem.condensedTitleId)
                 }

@@ -226,12 +226,11 @@ internal class XmlParser {
                             }
                             ATTRIBUTE_TITLE_CONDENSED, ATTRIBUTE_ANDROID_TITLE_CONDENSED -> {
                                 val condensedTitleValue = attrs.getAttributeValue(attributeIndex)
-                                if (
-                                    condensedTitleValue != null &&
-                                    condensedTitleValue.startsWith(TITLE_KEY_PREFIX)
-                                )
+                                if (condensedTitleValue != null &&
+                                    condensedTitleValue.startsWith(TITLE_KEY_PREFIX)) {
                                     condensedTitleKey =
                                         attrs.getAttributeResourceValue(attributeIndex, 0)
+                                }
                             }
                         }
                     }

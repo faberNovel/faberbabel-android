@@ -27,7 +27,7 @@ internal class FaberBabelContextWrapper(
             resourcesManager
         )
         viewTransformerManager = ViewTransformerManager(
-            TextViewTransformer(),
+            TextViewTransformer(faberBabelResources),
             ToolbarTransformer(xmlParser, faberBabelResources),
             BottomNavigationViewTransformer(xmlParser, faberBabelResources)
         )
