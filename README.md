@@ -1,6 +1,6 @@
 # FaberBabel Android SDK
 
-[![Release](https://jitpack.io/v/fabernovel/stateful-layout.svg)](https://jitpack.io/#fabernovel/stateful-layout)
+[![Release](https://jitpack.io/v/fabernovel/faberbabel-android.svg)](https://jitpack.io/#fabernovel/faberbabel-android)
 
 FaberBabel Android
 
