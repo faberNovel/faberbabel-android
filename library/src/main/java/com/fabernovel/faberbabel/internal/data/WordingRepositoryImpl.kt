@@ -66,10 +66,14 @@ internal class WordingRepositoryImpl(
                     }
 
                     override fun onResponse(call: Call, response: Response) {
-                        val xmlResponse = response.body?.string()
-                        saveWordingToCache(xmlResponse)
-                        val wordingResponse = xmlParser.parseXml(xmlResponse)
-                        cont.resume(WordingResponse.WordingResources(wordingResponse))
+                        if (response.isSuccessful) {
+                            val xmlResponse = response.body?.string()
+                            saveWordingToCache(xmlResponse)
+                            val wordingResponse = xmlParser.parseXml(xmlResponse)
+                            cont.resume(WordingResponse.WordingResources(wordingResponse))
+                        } else {
+                            cont.resume(WordingResponse.Error)
+                        }
                     }
                 }
             )

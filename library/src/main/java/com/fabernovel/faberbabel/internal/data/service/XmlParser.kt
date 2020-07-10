@@ -1,5 +1,6 @@
 package com.fabernovel.faberbabel.internal.data.service
 
+import android.util.Xml
 import com.fabernovel.faberbabel.internal.data.model.StringResource
 import org.xmlpull.v1.XmlPullParser
 import org.xmlpull.v1.XmlPullParserException
@@ -170,6 +171,88 @@ internal class XmlParser {
         return null
     }
 
+    fun parseMenuXml(parser: XmlPullParser): List<MenuItem> {
+        val menuItems = mutableListOf<MenuItem>()
+        val attrs = Xml.asAttributeSet(parser)
+        if (attrs != null) {
+            var eventType = parser.eventType
+            while (eventType != XmlPullParser.END_DOCUMENT) {
+                val tag = parser.name
+                when (eventType) {
+                    XmlPullParser.START_TAG -> {
+                        if (tag == TAG_MENU) {
+                            parseMenuItems(parser, menuItems)
+                        }
+                    }
+                }
+                try {
+                    eventType = parser.next()
+                } catch (exception: XmlPullParserException) {
+                    return emptyList()
+                }
+            }
+        }
+        return menuItems
+    }
+
+    private fun parseMenuItems(parser: XmlPullParser, menuItems: MutableList<MenuItem>) {
+        var eventType = parser.eventType
+        if (eventType == XmlPullParser.END_DOCUMENT) {
+            return
+        }
+        while (eventType != XmlPullParser.END_DOCUMENT) {
+            if (eventType != XmlPullParser.START_TAG) {
+                eventType = parser.next()
+                continue
+            }
+            val tag = parser.name
+            when (tag) {
+                TAG_ITEM -> {
+                    var id = 0
+                    var titleKey = 0
+                    var condensedTitleKey = 0
+                    val attrs = Xml.asAttributeSet(parser)
+                    for (attributeIndex in 0 until attrs.attributeCount) {
+                        val attributeName = attrs.getAttributeName(attributeIndex)
+                        when (attributeName) {
+                            ATTRIBUTE_ID, ATTRIBUTE_ANDROID_ID -> {
+                                id = attrs.getAttributeResourceValue(attributeIndex, 0)
+                            }
+                            ATTRIBUTE_TITLE, ATTRIBUTE_ANDROID_TITLE -> {
+                                val titleValue = attrs.getAttributeValue(attributeIndex)
+                                if (titleValue != null && titleValue.startsWith(TITLE_KEY_PREFIX)) {
+                                    titleKey = attrs.getAttributeResourceValue(attributeIndex, 0)
+                                }
+                            }
+                            ATTRIBUTE_TITLE_CONDENSED, ATTRIBUTE_ANDROID_TITLE_CONDENSED -> {
+                                val condensedTitleValue = attrs.getAttributeValue(attributeIndex)
+                                if (condensedTitleValue != null &&
+                                    condensedTitleValue.startsWith(TITLE_KEY_PREFIX)) {
+                                    condensedTitleKey =
+                                        attrs.getAttributeResourceValue(attributeIndex, 0)
+                                }
+                            }
+                        }
+                    }
+                    if (id != 0) {
+                        menuItems.add(
+                            MenuItem(
+                                id,
+                                titleKey,
+                                condensedTitleKey
+                            )
+                        )
+                    }
+                }
+                TAG_MENU -> {
+                    parser.next()
+                    parseMenuItems(parser, menuItems)
+                }
+            }
+            eventType = parser.next()
+        }
+    }
+
     companion object {
         private const val TAG_STRING = "string"
         private const val TAG_PLURALS = "plurals"
@@ -177,5 +260,19 @@ internal class XmlParser {
         private const val ATTRIBUTE_NAME = "name"
         private const val ATTRIBUTE_QUANTITY = "quantity"
         private const val TEXT_PREFIX_SUFFIX = "\""
+        private const val TAG_MENU = "menu"
+        private const val ATTRIBUTE_TITLE = "title"
+        private const val ATTRIBUTE_ANDROID_TITLE = "android:title"
+        private const val ATTRIBUTE_ID = "id"
+        private const val ATTRIBUTE_ANDROID_ID = "android:id"
+        private const val ATTRIBUTE_TITLE_CONDENSED = "titleCondensed"
+        private const val ATTRIBUTE_ANDROID_TITLE_CONDENSED = "android:titleCondensed"
+        private const val TITLE_KEY_PREFIX = "@"
     }
 }
+
+data class MenuItem(
+    val itemId: Int,
+    val titleId: Int,
+    val condensedTitleId: Int
+)

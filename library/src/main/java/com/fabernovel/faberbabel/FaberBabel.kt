@@ -21,11 +21,11 @@ class FaberBabel(
 ) {
     private val repository: WordingRepository
     private val resourcesManager: ResourcesManager
+    private val xmlParser: XmlParser = XmlParser()
 
     init {
         val okHttpClient = OkHttpClient()
         val service = FaberBabelService(okHttpClient)
-        val xmlParser = XmlParser()
         repository = WordingRepositoryImpl(service, xmlParser, applicationContext)
         resourcesManager = WordingResourcesManager(repository)
     }
@@ -38,7 +38,7 @@ class FaberBabel(
      * @return An extension of ContextWrapper
      */
     fun provideFaberBabelContextWrapper(context: Context): ContextWrapper {
-        return FaberBabelContextWrapper(context, resourcesManager)
+        return FaberBabelContextWrapper(context, resourcesManager, xmlParser)
     }
 
     /**

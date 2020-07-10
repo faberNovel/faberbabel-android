@@ -4,10 +4,12 @@ import android.util.AttributeSet
 import android.view.View
 import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 internal class ViewTransformerManager(
     private val textViewTransformer: TextViewTransformer,
-    private val toolbarTransformer: ToolbarTransformer
+    private val toolbarTransformer: ToolbarTransformer,
+    private val bottomNavigationViewTransformer: BottomNavigationViewTransformer
 ) {
 
     /**
@@ -26,6 +28,7 @@ internal class ViewTransformerManager(
             is TextView -> textViewTransformer.transform(view, attrs)
             is Toolbar -> toolbarTransformer.transform(view, attrs)
             is android.widget.Toolbar -> toolbarTransformer.transform(view, attrs)
+            is BottomNavigationView -> bottomNavigationViewTransformer.transform(view, attrs)
             else -> view
         }
     }
