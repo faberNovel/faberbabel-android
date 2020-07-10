@@ -21,12 +21,11 @@ class FaberBabel(
 ) {
     private val repository: WordingRepository
     private val resourcesManager: ResourcesManager
-    private val xmlParser: XmlParser
+    private val xmlParser: XmlParser = XmlParser()
 
     init {
         val okHttpClient = OkHttpClient()
         val service = FaberBabelService(okHttpClient)
-        xmlParser = XmlParser()
         repository = WordingRepositoryImpl(service, xmlParser, applicationContext)
         resourcesManager = WordingResourcesManager(repository)
     }

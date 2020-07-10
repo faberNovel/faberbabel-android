@@ -5,8 +5,6 @@ import android.content.res.Resources
 import android.os.Build
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import com.fabernovel.faberbabel.FaberBabel
 import com.fabernovel.faberbabel.internal.data.model.Config
 import com.fabernovel.statefullayout.showContent
@@ -20,7 +18,6 @@ class MainActivity : AppCompatActivity() {
 
     // Must be injected as a Singleton by Dagger with application context
     private val faberBabelSDK: FaberBabel = FaberBabel(this)
-    private val fetchLiveData = MutableLiveData<Boolean>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,20 +38,17 @@ class MainActivity : AppCompatActivity() {
                         Locale.getDefault().language
                     )
                 )
-                fetchLiveData.postValue(true)
+                restartActivity()
             }
         }
         faberbabelStateful.showContent()
+    }
 
-        fetchLiveData.observe(this,
-            Observer {
-                if (it) {
-                    finish()
-                    overridePendingTransition(0, 0)
-                    startActivity(intent)
-                    overridePendingTransition(0, 0)
-                }
-            })
+    private fun restartActivity() {
+        finish()
+        overridePendingTransition(0, 0)
+        startActivity(intent)
+        overridePendingTransition(0, 0)
     }
 
     override fun attachBaseContext(newBase: Context) {
@@ -73,7 +67,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun getResources(): Resources {
         // Fix FaberBabel for devices API 25 and below
-        // The returned resources is not the resources that is override in FaberBabel
+        // The returned resources is not the resources that is overrided in FaberBabel
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             super.getResources()
         } else {
