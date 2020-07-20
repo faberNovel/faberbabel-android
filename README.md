@@ -26,22 +26,22 @@ dependencies {
 ```
 
 ## Usage
-FaberBabel allows to update application wording dynamicaly, without re-deploying, by overriding its resources. 
-The wording is fetch from back and saved as an application cache file.
-The application that use FaberBabel must have the local default wording. Because, if there is un error durring fetching the wording from the back, and there is no
-saved cach yet, so the local wording will be used. If the remote wording don't have some specific key of used string resource, it's default string resource for that
-key that will be used. It is the same if some information of a specific key is missing, as text, plural resource or number of string format variables is not matching.
+FaberBabel allows to update the application wording dynamically, without re-deploying a version of the application to the store, by overriding its resources. 
+The wording is fetched from the server and saved as an application cache file.
+The application that use FaberBabel must have a default wording xml file locally: if there is an error durring the fetching process and there is no
+saved cache yet, the local wording will be used. If the remote wording don't have some specific key of a string resource, it's default value for that
+key will be used. It is the same if some information of a specific key is missing, as text, plural resource or number of string format variables is not matching.
 
-### Initialisation
+### Initialization
 
-`FaberBabel` is a class that allow to exploide all fonctionnalities of the SDK. It has two main tasks: 
+`FaberBabel` class is the single entry point of the SDK. It has two main tasks: 
 - override application context to give the access to overrided resources with remote wording;
 - fetch remote wording to update cache file and update dynamically the current wording. It can be fetch asynchronously or synchronously;
 
-To use it, inject Faberbabel in the Application as a `Singleton` with application context as parameter. After that you can fetch the wording or get the overrited
+To use it, inject Faberbabel in the Application as a `Singleton` with application context as parameter. After that you can fetch the wording or get the overridden
 context.
 
-For example
+For example (using Dagger2 dependency injection):
 ```
 @Module
 class FaberbabelModule {
@@ -57,30 +57,30 @@ class FaberbabelModule {
 
 ### Attach context to activity:
 
-To have access to overrited resources, we must attach faberbabel context as base context of an activity. By doing this, the methods as "getString" or the view inflation
-will use the remote wording instead off deafult one. The fragments started from the activity will have the same behaviour.
-To do this, it is necessary to override the 'attachBaseContext' as below
+To have access to the overridden resources, we must attach faberbabel context as base context of an activity. By doing this, the methods as "getString" or the view inflation will use the remote wording (saved on cache) instead of the deafult one. The fragments started from the activity will have the same behaviour.
+To do this, it is necessary to override the 'attachBaseContext' as below (in the activity class): 
 
 ```
 @Inject
 private lateinit val faberBabelSdk: FaberBabel
 
 override fun attachBaseContext(newBase: Context) {
-        super.attachBaseContext(faberBabelSdk.provideFaberBabelContextWrapper(newBase))
-    }
+    super.attachBaseContext(faberBabelSdk.provideFaberBabelContextWrapper(newBase))
+}
 ```
 
 
 #### Configuration
-FaberBabel request 3 parameter:
-- service url which is : "https://faberbabel-develop.herokuapp.com/translations/projects"
-- project id that looks like : "349a41ab-7815-4cf6-ae54-2e5f2304bfe9"
-- language code of wording that will be fetched : "en", "fr", "ua", "ru"...
+FaberBabel request 3 parameters:
+- service url
+    - develop: "https://faberbabel-develop.herokuapp.com/translations/projects"
+- project id that looks like : "349b41aa-7813-4cd6-az54-2e5f2309bfe9"
+- language code of wording that will be fetched, following the ISO 639-1 nomenclature (https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes): "en", "fr", "ua", "ru"...
 
 The first 2 parameters should be placed in the config file of the application.
 
 #### Inflation
-Overrided context by FaberBabel provide also an overrided LayoutInflater that allows to inject remote wording during inflation of the view.
+Overridden context by FaberBabel provide also an overridden LayoutInflater that allows to inject remote wording during view inflation.
 
 ##### Menu inflatation
 During menu inflation, the component that containt a menu create its own MenuInflater that is not part of LayoutInflater and was not overrided.
@@ -109,54 +109,52 @@ DO
 
 #### Api <26 precaution
 For applications on device api 25 or bellow, the returned resources is not the one that is overrided by FaberBabel and that attached to base context.
-To fix this problem, we should add the bellow code to the main activity where the overrided context is attached.
+To fix this problem, you should add the bellow code to the main activity where the overrided context is attached.
 
 ```
 override fun getResources(): Resources {
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            super.getResources()
-        } else {
-            baseContext.resources
-        }
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        super.getResources()
+    } else {
+        baseContext.resources
     }
+}
 ```
 
 ### Wording fetch
-For the wording fetch there is two possibilities: fetch wording asynchronously and synchronously.
+A wording file can be retrieved both synchronously or asynchronously.
 
 #### Asynchronously
-If the wording is fetched asynchronously, there is a high possibility that the network call will be too slow and the first application start, when there is no cach yet,
-will display the default wording on the first screen. In other case is the cached wording that will be used if the network call is too slow.
+If the wording is fetched asynchronously, there is a high probability that the network call will return after the first activity was inflated, so the the default wording will be visible on the first screen. In other case the cached wording will be used if the network call is too slow.
 
-To do the asynchronous fetch use the example code below
-
+To perform an asynchronous fetch use the example code below
 ```
 faberBabelSDK.asyncFetchFaberBabelWording(
-            Config(
-                FABERBABEL_SERVICE_URL,
-                PROJECT_ID,
-                LANGUAGE_CODE
-            )
-        )
+    Config(
+        FABERBABEL_SERVICE_URL,
+        PROJECT_ID,
+        LANGUAGE_CODE
+    )
+)
 ```
 
 #### Synchronously
-If the wording is fetched synchronously, the network call run in the runBlocking coroutine. To avoid block the main thread, it should be called from a coroutine scope.
+If the wording is fetched synchronously, the call will freeze the thread performing the call. To avoid block the main thread, it should be called from a background thread.
 
-To do the synchronous fetch with action post execution use the example code below
+To perform a synchronous fetch use the example code below
 
 ```
-  //show loading state
-  GlobalScope.launch {
-      faberBabelSDK.syncFetchFaberBabelWording(
-          Config(
-              FABERBABEL_SERVICE_URL,
-              PROJECT_ID,
-              LANGUAGE_CODE
-          )
-      )
-      // do action after wording fetch
-  }
+//show loading state
+coroutineScope.launch(Dispatchers.IO) {
+    faberBabelSDK.syncFetchFaberBabelWording(
+        Config(
+            FABERBABEL_SERVICE_URL,
+            PROJECT_ID,
+            LANGUAGE_CODE
+        )
+    )
+    // do something after wording fetch
+}
 ```
 
 
