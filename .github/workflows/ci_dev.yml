@@ -38,7 +38,7 @@ jobs:
 
       - name: Fastlane
         env:
-          AWS_S3_ACCESS_KEY: ${{ secrets.AWS_S3_ACCESS_KEY }}
-          AWS_S3_SECRET_KEY: ${{ secrets.AWS_S3_SECRET_KEY }}
-          COMMIT_HASH: $(git rev-parse "$GITHUB_SHA")
+          AWS_S3_ACCESS_KEY: ${secrets.AWS_S3_ACCESS_KEY}
+          AWS_S3_SECRET_KEY: ${secrets.AWS_S3_SECRET_KEY}
+          COMMIT_HASH: ${GITHUB_SHA}
         run: bundle exec fastlane build_and_publish

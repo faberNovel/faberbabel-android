@@ -4,7 +4,7 @@ apply from: '../publishing.gradle'
 ext.release = [
     versionName     : "1.0.0-SNAPSHOT",
     groupId         : "com.fabernovel.faberbabel",
-    moduleArtifactId: "faberbabel"
+    moduleArtifactId: "faberbabel_lib"
 ]
 
 task sourcesJar(type: Jar) {
