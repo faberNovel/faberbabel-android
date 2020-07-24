@@ -15,8 +15,8 @@ project.ext {
         if (System.getenv('AWS_S3_ACCESS_KEY') != null &&
             System.getenv('AWS_S3_SECRET_KEY') != null) {
             return [
-                awsAccessKey: System.getenv('AWS_S3_ACCESS_KEY'),
-                awsSecretKey:  System.getenv('AWS_S3_SECRET_KEY')
+                AWSAccessKeyId: System.getenv('AWS_S3_ACCESS_KEY'),
+                AWSSecretKey: System.getenv('AWS_S3_SECRET_KEY')
             ]
         } else {
             try {
