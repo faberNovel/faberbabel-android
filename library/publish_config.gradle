@@ -42,19 +42,5 @@ project.afterEvaluate {
 
 
 private String getVersionName() {
-    // TODO remove test code
-    println "----------------test 3------------------"
-    def gitFolder = "/Users/anatoliigasiuk/Desktop/Work_Projects/faberbabel-android/.git/"
-    def head = new File(gitFolder + "HEAD").text.split(":")
-    println "----------------test 3.1------------------"
-    def versionName = "${release.versionName}"
-    if (head.length == 1) {
-        versionName = versionName + "-" + head[0].trim()
-    } else if (head.length >= 1) {
-        def refHead = new File(gitFolder + head[1].trim())
-        versionName = versionName + "-" + refHead.text.trim()
-    }
-    println "----------------test 3.3------------------"
-    //return versionName
     return "${release.versionName}" + "-" + System.getenv('COMMIT_HASH')
 }
