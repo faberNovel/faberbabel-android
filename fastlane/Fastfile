@@ -21,4 +21,8 @@ platform :android do
   lane :build do
     gradle(task: ":sample:assemble")
   end
+
+  lane :build_and_publish do |options|
+      gradle(tasks: [":sample:assemble", "publish"])
+    end
 end

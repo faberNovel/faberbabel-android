@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">faberbabelsample</string>
-    <string name="hello_world_title">Hello phone word</string>
+    <string name="hello_world_title">Hello phone world</string>
     <string name="wording_not_present_in_faberbabel">I\'m by default on the phone</string>
     <plurals
         name="wording_plural_example">

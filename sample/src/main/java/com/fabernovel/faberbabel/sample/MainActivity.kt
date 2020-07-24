@@ -21,13 +21,13 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         setContentView(R.layout.activity_main)
         wordingFromFaberbabel.text = this.getString(R.string.hello_world_title)
         wordingNotPresentInFaberbabel.text =
             resources.getString(R.string.wording_not_present_in_faberbabel)
         pluralFromFaberbabel.text = resources.getQuantityString(R.plurals.wording_plural_example, 0)
 
+        // Example of sync wording fetch
         wordingButton.setOnClickListener {
             faberbabelStateful.showLoading()
             GlobalScope.launch {

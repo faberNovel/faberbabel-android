@@ -1,0 +1,60 @@
+apply plugin: 'maven-publish'
+apply from: '../publishing.gradle'
+
+ext.release = [
+    versionName     : "1.0.0-SNAPSHOT",
+    groupId         : "com.fabernovel.faberbabel",
+    moduleArtifactId: "faberbabel"
+]
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from android.sourceSets.main.java.srcDirs
+}
+
+project.afterEvaluate {
+    publishing {
+        publications {
+            maven(MavenPublication) {
+                groupId = release.groupId
+                artifactId = release.moduleArtifactId
+                version = getVersionName()
+                artifact sourcesJar
+                artifact bundleReleaseAar
+                pom {
+                    // TODO add license for release
+                }
+            }
+        }
+        repositories {
+            maven {
+                def awsCredentials = fetchAwsCredentials()
+
+                url "s3://ft-maven-repo.s3.amazonaws.com/snapshot"
+                credentials(AwsCredentials) {
+                    accessKey = awsCredentials.AWSAccessKeyId
+                    secretKey = awsCredentials.AWSSecretKey
+                }
+            }
+        }
+    }
+}
+
+
+private String getVersionName() {
+    // TODO remove test code
+    println "----------------test 3------------------"
+    def gitFolder = "/Users/anatoliigasiuk/Desktop/Work_Projects/faberbabel-android/.git/"
+    def head = new File(gitFolder + "HEAD").text.split(":")
+    println "----------------test 3.1------------------"
+    def versionName = "${release.versionName}"
+    if (head.length == 1) {
+        versionName = versionName + "-" + head[0].trim()
+    } else if (head.length >= 1) {
+        def refHead = new File(gitFolder + head[1].trim())
+        versionName = versionName + "-" + refHead.text.trim()
+    }
+    println "----------------test 3.3------------------"
+    //return versionName
+    return "${release.versionName}" + "-" + System.getenv('COMMIT_HASH')
+}
