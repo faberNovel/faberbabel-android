@@ -18,7 +18,8 @@ project.afterEvaluate {
             maven(MavenPublication) {
                 groupId = release.groupId
                 artifactId = release.moduleArtifactId
-                version = getVersionName()
+                // TODO add commit hash to version name
+                version = release.versionName
                 artifact sourcesJar
                 artifact bundleReleaseAar
                 pom {
