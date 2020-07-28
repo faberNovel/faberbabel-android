@@ -4,7 +4,7 @@ apply from: '../publishing.gradle'
 ext.release = [
     versionName     : "1.0.0-SNAPSHOT",
     groupId         : "com.fabernovel.faberbabel",
-    moduleArtifactId: "faberbabel_lib"
+    moduleArtifactId: "faberbabel"
 ]
 
 task sourcesJar(type: Jar) {
@@ -18,9 +18,8 @@ project.afterEvaluate {
             maven(MavenPublication) {
                 groupId = release.groupId
                 artifactId = release.moduleArtifactId
-                version = getVersionName()
-                artifact sourcesJar
-                artifact bundleReleaseAar
+                version = release.versionName
+                from components.release
                 pom {
                     // TODO add license for release
                 }
@@ -38,9 +37,4 @@ project.afterEvaluate {
             }
         }
     }
-}
-
-
-private String getVersionName() {
-    return "${release.versionName}" + "-" + System.getenv('COMMIT_HASH')
 }
