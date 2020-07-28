@@ -1,6 +1,9 @@
 # FaberBabel Android SDK
 
-[![Release](https://jitpack.io/v/fabernovel/faberbabel-android.svg)](https://jitpack.io/#fabernovel/faberbabel-android)
+Release 
+``
+1.0.0-SNAPSHOT
+``
 
 FaberBabel Android
 
@@ -10,18 +13,54 @@ FaberBabel Android
 To contribute please read [the Contribution Guide](docs/CONTRIBUTING.md)
 
 ## Installation
-Add Jitpack:
+Add to project build.gradle the following code:
+
+* amazonaws classpath
 ```
-repositories {
-  ...
-  maven { url 'https://jitpack.io' }
+dependencies {
+        ...
+        classpath 'com.amazonaws:aws-java-sdk-core:<Version>'
+    }
+```
+* private aws repository 
+```
+allprojects {
+    AWSCredentials awsCredentials = fetchAwsCredentials()
+    repositories {
+        ...
+        maven { 
+            url "s3://ft-maven-repo.s3.amazonaws.com/snapshot"
+            credentials(AwsCredentials) {
+                accessKey = awsCredentials.AWSAccessKeyId
+                secretKey = awsCredentials.AWSSecretKey
+                }
+            }
+        }
+    }
+}
+```
+* fetch aws credentials function
+```
+import com.amazonaws.auth.AWSCredentials
+import com.amazonaws.auth.profile.ProfileCredentialsProvider
+
+...
+
+def fetchAwsCredentials = {
+    try {
+        return new ProfileCredentialsProvider("ft_maven_repo").credentials
+    } catch (Exception e) {
+        throw new GradleException(
+            'Exception message'
+        )
+    }
 }
 ```
 
 Add the dependency:
 ```
 dependencies {
-  implementation 'com.github.fabernovel:faberbabel-android:<Version>'
+  implementation 'com.github.fabernovel.faberbabel:faberbabel:<Version>'
 }
 ```
 
