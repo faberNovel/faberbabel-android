@@ -18,7 +18,8 @@ project.afterEvaluate {
             maven(MavenPublication) {
                 groupId = release.groupId
                 artifactId = release.moduleArtifactId
-                version = release.versionName
+                version = getVersionName()
+
                 from components.release
                 pom {
                     // TODO add license for release
@@ -37,4 +38,12 @@ project.afterEvaluate {
             }
         }
     }
+}
+
+private String getVersionName() {
+    String commitHach = System.getenv('COMMIT_HASH')
+    if (commitHach != null && commitHach.size() > 8) {
+        commitHach = commitHach.substring(0, 8)
+    }
+    return "${release.versionName}" + "+" + commitHach
 }
