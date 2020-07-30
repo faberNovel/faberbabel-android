@@ -2,7 +2,7 @@
 
 Release 
 ``
-1.0.0-SNAPSHOT
+1.0.0-SNAPSHOT+6d8178eb
 ``
 
 FaberBabel Android
@@ -60,7 +60,7 @@ def fetchAwsCredentials = {
 Add the dependency:
 ```
 dependencies {
-  implementation 'com.github.fabernovel.faberbabel:faberbabel:<Version>'
+  implementation 'com.fabernovel.faberbabel:faberbabel:<Version>'
 }
 ```
 
@@ -88,7 +88,7 @@ class FaberbabelModule {
   @Provides
   @Singleton
   fun provideFaberBabelSdk(application: Application): FaberBabel {
-    return Faberbabel(application)
+    return FaberBabel(application)
   }
 }
 
@@ -100,8 +100,7 @@ To have access to the overridden resources, we must attach faberbabel context as
 To do this, it is necessary to override the 'attachBaseContext' as below (in the activity class): 
 
 ```
-@Inject
-private lateinit val faberBabelSdk: FaberBabel
+@Inject lateinit var faberBabelSdk: FaberBabel
 
 override fun attachBaseContext(newBase: Context) {
     super.attachBaseContext(faberBabelSdk.provideFaberBabelContextWrapper(newBase))
